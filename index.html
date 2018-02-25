@@ -1,0 +1,61 @@
+<!doctype html>
+<head>
+<title>Chat App</title>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<style>
+    .jumbotron h1, input, textarea, button{
+        margin:1em;
+    }
+</style>
+</head>
+
+<body>
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="jumbotron">
+                    <h1 class="display-4">Send Message</h1>
+                    <input id="name" class="form-control" placeholder="Name">
+                    <textarea id="message" class="form-control" placeholder="Message"></textarea>
+                    <button id="send" class="btn btn-success">Send</button>
+                </div>
+            </div>
+            <div id="messages">
+
+            </div>
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js" integrity="sha384-feJI7QwhOS+hwpX2zkaeJQjeiwlhOP+SdQDqhgvvo1DsjtiSQByFdThsxO669S2D" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io()
+        $(()=>{
+            $("#send").click(()=>{
+                var message ={name: $("#name").val(), message: $("#message").val()}
+                postMessage(message)
+            })
+            getMessages();
+        })
+
+        socket.on('message',addMessage)
+
+        function addMessage(message){
+            $("#messages").append(`<h4> ${message.name} </h4> <p> ${message.message} </p>`)
+        }
+
+        function getMessages(){
+            $.get('http://localhost:3000/messages', (data) =>{
+                data.forEach(addMessage);
+            })
+        }
+
+        function postMessage(message){
+            $.post('http://localhost:3000/messages', message)
+        }
+    </script>
+    
+</body>
+</html>
+
