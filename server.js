@@ -14,7 +14,8 @@ var dbUrl = 'mongodb://moiseslorap:ChatDB1234@ds147668.mlab.com:47668/chat-db'
 
 var Message = mongoose.model('Message',{
     name: String,
-    message: String
+    message: String,
+    date: String
 })
 
 app.get('/messages', (req,res)=>{
